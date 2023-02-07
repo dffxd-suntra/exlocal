@@ -1,17 +1,16 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+let createError = require("http-errors");
+let express = require("express");
+let path = require("path");
+let cookieParser = require("cookie-parser");
+let logger = require("morgan");
 
-var ejs = require('ejs');
+// 使用ejs模板
+let ejs = require('ejs');
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-
-var app = express();
+let app = express();
 
 // view engine setup
+// 初始化view模板和引擎
 app.set("views", path.join(__dirname, "views"));
 app.engine("html", ejs.__express);
 app.set("view engine", "html");
@@ -22,9 +21,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// 页面
+let indexRouter = require("./routes/index");
+let usersRouter = require("./routes/users");
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
+// 如果用户页面没有起作用就接着运行
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));
