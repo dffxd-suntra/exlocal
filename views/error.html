@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="一堆漫画" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error</title>
+    <link rel="shortcut icon" href="#" />
+</head>
+
+<body>
+    <h1><%= message %></h1>
+    <h2><%= error.status %></h2>
+    <pre><%= error.stack %></pre>
+    <p>将会在 <span id="time"></span> 秒后自动返回首页！</p>
+    <script src="/script/jquery.min.js"></script>
+    <script>
+        let time = 5;
+        $("#time").text(time);
+        setInterval(function () {
+            time--;
+            $("#time").text(time);
+            if(time<=0) {
+                location.href = "/";
+            }
+        }, 1000);
+    </script>
+</body>
+
+</html>
