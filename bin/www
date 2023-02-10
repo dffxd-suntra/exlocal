@@ -26,7 +26,7 @@ if (config.http) {
     http_server.on("error", onError);
 
     console.log(`
-http服务器运行在 http://${http_host}:${http_port}
+http服务器运行在 http://${http_host}:${http_port}/
 如需要结束请输入组合键ctrl+c或在拥有服主权限的管理员面板中关闭服务器
 `);
 }
@@ -50,7 +50,7 @@ if (config.https) {
     https_server.on("error", onError);
 
     console.log(`
-https服务器运行在 https://${https_host}:${https_port}
+https服务器运行在 https://${https_host}:${https_port}/
 如需要结束请输入组合键ctrl+c或在拥有服主权限的管理员面板中关闭服务器
 `);
 }
