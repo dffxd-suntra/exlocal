@@ -1,33 +1,59 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-
-let app = require("../app");
+// 引模块
 let debug = require("debug")("exlocal:server");
-let http = require("http");
+let fs = require("fs");
 
-/**
- * Get port from environment and store in Express.
- */
+// 读取配置文件
+let config = readConfig();
+process.env.config = config;
+debug(config);
 
-let port = normalizePort(process.env.PORT || "3000");
-app.set("port", port);
+// 引入应用本体
+let app = require("../app");
 
-/**
- * Create HTTP server.
- */
+if (config.http) {
+    var http = require("http");
 
-let server = http.createServer(app);
+    var http_port = normalizePort(process.env.HTTP_PORT || config.http_port);
+    var http_host = process.env.HTTP_HOST || config.http_host;
+    app.set("http_port", http_port);
+    app.set("http_host", http_host);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+    var http_server = http.createServer(app);
 
-server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
+    http_server.listen(http_port, http_host);
+    http_server.on("error", onError);
+
+    console.log(`
+http服务器运行在 http://${http_host}:${http_port}
+如需要结束请输入组合键ctrl+c或在拥有服主权限的管理员面板中关闭服务器
+`);
+}
+
+if (config.https) {
+    var https = require("https");
+
+    var https_port = normalizePort(process.env.HTTPS_PORT || config.https_port);
+    var https_host = process.env.HTTPS_HOST || config.https_host;
+    app.set("https_port", https_port);
+    app.set("https_host", https_host);
+
+    var https_options = {
+        key: fs.readFileSync(config.https_key),
+        cert: fs.readFileSync(config.https_cert)
+    };
+
+    var https_server = https.createServer(options, app);
+
+    https_server.listen(https_port, https_host);
+    https_server.on("error", onError);
+
+    console.log(`
+https服务器运行在 https://${https_host}:${https_port}
+如需要结束请输入组合键ctrl+c或在拥有服主权限的管理员面板中关闭服务器
+`);
+}
 
 /**
  * Normalize a port into a number, string, or false.
@@ -78,13 +104,16 @@ function onError(error) {
 }
 
 /**
- * Event listener for HTTP server "listening" event.
+ * 读取并合并配置文件
  */
 
-function onListening() {
-    let addr = server.address();
-    let bind = typeof addr === "string"
-        ? "pipe " + addr
-        : "port " + addr.port;
-    debug("Listening on " + bind);
+function readConfig() {
+    let defaultConfig = require("../config/default.config");
+    let userConfig = require("../config/user.config");
+
+    for (let i in userConfig) {
+        defaultConfig[i] = userConfig[i];
+    }
+
+    return defaultConfig;
 }
