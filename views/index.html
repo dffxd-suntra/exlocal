@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="description" content="一堆漫画" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
         <%= title %>
@@ -38,50 +37,7 @@
 </head>
 
 <body>
-    <!-- 导航栏 -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark"
-        style="border-width: 0;border-bottom-width: 1px;padding: 2px;">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">exlocal</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse navbar-nav" id="navCollapse">
-                <div class="navbar-nav me-auto">
-                    <div class="nav-item">
-                        <a class="nav-link active" href="/">主页</a>
-                    </div>
-                    <div class="nav-item">
-                        <a class="nav-link" href="/favorites/">收藏夹</a>
-                    </div>
-                    <div class="nav-item">
-                        <a class="nav-link" href="/search/">搜索</a>
-                    </div>
-                    <div class="nav-item">
-                        <a class="nav-link" href="/about/">关于</a>
-                    </div>
-                </div>
-
-                <div class="navbar-nav">
-                    <div class="nav-item">
-                        <a class="nav-link" href="#">用户</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- 内容 -->
-    <div class="container-fluid d-flex flex-column align-items-center row" id="content">
-        <div class="shadow col-md-9 col-11">
-            <%= content.header %>
-        </div>
-        <div class="shadow col-md-9 col-11">
-            <%= content.body %>
-        </div>
-        <%= content.footer %>
-    </div>
-    <script src="script/jquery.min.js"></script>
+    <%- include(page); %>
     <script src="script/bootstrap.bundle.min.js"></script>
 </body>
 

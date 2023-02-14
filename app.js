@@ -38,12 +38,10 @@ app.use(function (req, res, next) {
 app.use(express.static(path.join(__dirname, "public")));
 
 // 检查是否安装
-let installRouter = require("./routes/install");
-app.use(installRouter);
+app.use(require("./routes/install"));
 
 // 主页面
-let indexRouter = require("./routes/index");
-app.use("/", indexRouter);
+app.use("/", require("./routes/home"));
 
 // 如果没有返回页面就到错误部分
 // catch 404 and forward to error handler

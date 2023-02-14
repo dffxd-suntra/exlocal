@@ -6,4 +6,7 @@ let knex = require('knex')({
     }
 });
 
-module.exports = {};
+module.exports = {
+    createUser() {
+    },
+};

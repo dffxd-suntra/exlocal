@@ -1,0 +1,78 @@
+<!-- 内容 -->
+<div class="container-fluid d-flex flex-column align-items-center row" id="content">
+    <div class="shadow col-md-9 col-11 mt-3 p-3">
+        <div class="page-header">
+            <h2>安装界面 <small>初始化您的网站</small></h2>
+        </div>
+    </div>
+    <div class="shadow col-md-9 col-11 mt-3 p-3" id="create">
+        <h4>用户名用来登录,昵称不可!<br />昵称可以重复,用户名唯一!</h4>
+        <form id="createMasterFrom" method="post" action="/install">
+            <label for="username">用户名(必选)</label>
+            <input type="text" class="form-control mb-2" id="username" name="username" placeholder="用户名" />
+            <label for="password">密码(必选)</label>
+            <input type="password" class="form-control mb-2" id="password" name="password" placeholder="密码" />
+            <label for="nickname">昵称(非必选)</label>
+            <input type="text" class="form-control mb-2" id="nickname" name="nickname" placeholder="昵称" />
+            <label for="email">邮箱(非必选)</label>
+            <input type="text" class="form-control mb-2" id="email" name="email" placeholder="邮箱" />
+            <label for="phone">手机号(非必选)</label>
+            <input type="text" class="form-control mb-2" id="phone" name="phone" placeholder="手机号" />
+            <input class="btn btn-primary" type="submit" id="submit" value="登录" />
+            <input class="btn btn-primary" type="reset" value="重置" />
+        </form>
+        <span id="state"></span>
+        <h4>用户名用来登录,昵称不可!<br />昵称可以重复,用户名唯一!</h4>
+    </div>
+    <div class="shadow col-md-9 col-11 mt-3 p-3" id="success" style="display: none;">
+        <h1>站长创建成功!</h1>
+        <p>后台在根目录下 /admin</p>
+    </div>
+</div>
+<script src="script/jquery.min.js"></script>
+<script>
+    function send() {
+        $("#state").text("正在发送");
+        $.post("/install", {
+            username: $("#username").val(),
+            password: $("#password").val(),
+            nickname: $("#nickname").val(),
+            email: $("#email").val(),
+            phone: $("#phone").val()
+        }, function (data) {
+            if (data.state == "fail") {
+                alert("发生错误：" + data.message);
+                return;
+            }
+            $("#create").hide();
+            $("#success")
+                .append(
+                    $("<p></p>").append(
+                        "用户名：",
+                        $("<span></span>").text($("#username").val())
+                    ),
+                    $("<p></p>").append(
+                        "密码：",
+                        $("<span></span>").text($("#password").val())
+                    )
+                )
+                .show();
+            alert();
+        }, "json");
+    }
+    $("form#createMasterFrom").submit(function () {
+        try {
+            if ($("#username").val() == "" || $("#password").val() == "") {
+                throw new Error("请规范填写密码或用户名");
+            }
+            if ($("#email").val() != "" && !/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test($("#email").val())) {
+                throw new Error("请规范填写邮箱地址");
+            }
+            send();
+        } catch (error) {
+            alert("发生错误：" + error.message);
+        } finally {
+            return false;
+        };
+    });
+</script>
