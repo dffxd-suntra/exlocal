@@ -26,39 +26,51 @@
     </div>
     <div class="shadow col-md-9 col-11 mt-3 p-3" id="success" style="display: none;">
         <h1>站长创建成功!</h1>
-        <p>后台在根目录下 /admin</p>
+        <p>后台在根目录下 <a href="/admin">/admin</a></p>
+        <p>如要重新安装,请删除 routes/install.lock</p>
     </div>
 </div>
 <script src="script/jquery.min.js"></script>
 <script>
     function send() {
         $("#state").text("正在发送");
-        $.post("/install", {
-            username: $("#username").val(),
-            password: $("#password").val(),
-            nickname: $("#nickname").val(),
-            email: $("#email").val(),
-            phone: $("#phone").val()
-        }, function (data) {
-            if (data.state == "fail") {
-                alert("发生错误：" + data.message);
-                return;
-            }
-            $("#create").hide();
-            $("#success")
-                .append(
-                    $("<p></p>").append(
-                        "用户名：",
-                        $("<span></span>").text($("#username").val())
-                    ),
-                    $("<p></p>").append(
-                        "密码：",
-                        $("<span></span>").text($("#password").val())
+        $.post({
+            url: "/install",
+            dataType: "json",
+            data: {
+                username: $("#username").val(),
+                password: $("#password").val(),
+                nickname: $("#nickname").val(),
+                email: $("#email").val(),
+                phone: $("#phone").val()
+            },
+            success: function (data) {
+                if (data.state == "fail") {
+                    alert("发生错误：" + data.message);
+                    return;
+                }
+                $("#state").text("成功");
+                $("#create").hide();
+                $("#success")
+                    .append(
+                        $("<p></p>").append(
+                            "用户名：",
+                            $("<span></span>").text($("#username").val())
+                        ),
+                        $("<p></p>").append(
+                            "密码：",
+                            $("<span></span>").text($("#password").val())
+                        )
                     )
-                )
-                .show();
-            alert();
-        }, "json");
+                    .show();
+            },
+            timeout: function () {
+                $("#state").text("请求超时");
+            },
+            error: function () {
+                $("#state").text("请求错误");
+            }
+        });
     }
     $("form#createMasterFrom").submit(function () {
         try {

@@ -2,11 +2,9 @@ let express = require("express");
 let router = express.Router();
 let fs = require("fs");
 
-console.log(__dirname);
-
 // 直接获取页面
 router.get("/install", function (req, res, next) {
-    if (fs.existsSync("install.lock")) {
+    if (fs.existsSync("routes/install.lock")) {
         next();
         return;
     }
@@ -19,7 +17,7 @@ router.get("/install", function (req, res, next) {
 
 // 接收安装信息
 router.post("/install", function (req, res, next) {
-    if (fs.existsSync("install.lock")) {
+    if (fs.existsSync("routes/install.lock")) {
         next();
         return;
     }
@@ -49,8 +47,8 @@ router.post("/install", function (req, res, next) {
     }
 
     // 初始化数据库
-    let src = "../database/template.comic.sqlite3";
-    let dst = "../database/comic.sqlite3";
+    let src = "database/template.comic.sqlite3";
+    let dst = "database/comic.sqlite3";
     if (fs.existsSync(dst)) {
         fs.rmSync(dst);
     }
@@ -59,10 +57,10 @@ router.post("/install", function (req, res, next) {
     // 创建管理员账户
     let userController = require("../controllers/user_controller");
 
-    userController.createUser({ username, password, nickname, email, phone, type: "master" }); // js是支持这么个语法的
+    // userController.createUser({ username, password, nickname, email, phone, type: "master" }); // js是支持这么个语法的
 
     // 新建锁文件,确保不会重复安装
-    fs.writeFileSync("install.lock", "如要从新安装，请删除本文件");
+    // fs.writeFileSync("routes/install.lock", "如要从新安装，请删除本文件");
 
     // 成功
     res.type("application/json");
@@ -74,7 +72,7 @@ router.post("/install", function (req, res, next) {
 
 // 未安装自动跳转
 router.use(function (req, res, next) {
-    if (fs.existsSync("install.lock")) {
+    if (fs.existsSync("routes/install.lock")) {
         next();
         return;
     }
